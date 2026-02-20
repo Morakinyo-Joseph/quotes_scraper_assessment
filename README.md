@@ -27,15 +27,15 @@ To demonstrate best practices, the script includes built-in politeness measures:
 
 **2. Pagination and Navigation**
 
-Pagination: Pagination is handled dynamically within the main parse method. The scraper looks for the "Next" button using the CSS selector li.next a::attr(href). If the element exists, the spider yields a recursive response.follow request back to the parse method until it reaches the last page.
+- Pagination: Pagination is handled dynamically within the main parse method. The scraper looks for the "Next" button using the CSS selector li.next a::attr(href). If the element exists, the spider yields a recursive response.follow request back to the parse method until it reaches the last page.
 
-Navigation (Author Profiles): To collect the author data, the spider extracts the relative link to the author's bio for every quote. It then yields a request to that URL, calling a secondary parser (parse_author). To maintain a flat, relational data structure, the initial quote data is passed to the author request using Scrapy's cb_kwargs. The secondary parser extracts the author's birth details, merges the two dictionaries, and yields the final, complete item.
+- Navigation (Author Profiles): To collect the author data, the spider extracts the relative link to the author's bio for every quote. It then yields a request to that URL, calling a secondary parser (parse_author). To maintain a flat, relational data structure, the initial quote data is passed to the author request using Scrapy's cb_kwargs. The secondary parser extracts the author's birth details, merges the two dictionaries, and yields the final, complete item.
 
 **3. Challenge Encountered & Addressed**
 
-The Challenge: The website features multiple quotes from the same authors (e.g., Albert Einstein appears on almost every page). Out of the box, following every author link would result in the scraper fetching Einstein's bio page dozens of times, which wastes bandwidth, slows down the crawl, and puts unnecessary load on the server.
+- The Challenge: The website features multiple quotes from the same authors (e.g., Albert Einstein appears on almost every page). Out of the box, following every author link would result in the scraper fetching Einstein's bio page dozens of times, which wastes bandwidth, slows down the crawl, and puts unnecessary load on the server.
 
-The Solution: I implemented an in-memory cache (self.author_cache) within the Spider. Before yielding a request to an author's profile, the script checks if that author has already been scraped. If they are in the cache, the script instantly merges the cached author data with the new quote data and yields the item, completely bypassing the redundant HTTP request.
+- The Solution: I implemented an in-memory cache (self.author_cache) within the Spider. Before yielding a request to an author's profile, the script checks if that author has already been scraped. If they are in the cache, the script instantly merges the cached author data with the new quote data and yields the item, completely bypassing the redundant HTTP request.
 
 **4. Improvement With More Time**
 
