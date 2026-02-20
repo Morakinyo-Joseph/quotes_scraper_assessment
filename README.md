@@ -13,6 +13,7 @@ The scraper is built using **Scrapy**. To keep the evaluation process simple, I 
 **To run the scraper and generate the data:**
 ```bash
 scrapy runspider quotes_spider.py
+```
 
 1. Overall Approach
 
